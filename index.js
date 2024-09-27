@@ -14,16 +14,37 @@ class Calulcator {
     }
 
     onPressOperation(operation) {
-        this.$previousPreview.textContent = this.$currentPreview.textContent + ' ' + operation
+        this.$previousPreview.textContent =
+            this.$currentPreview.textContent + ' ' + operation
         this.$currentPreview.textContent = ''
         this.previousOperation = operation
     }
 
     onEqual() {
-        // 구현
-        // this.previousOperation 어떤 연산이 들어왔지
-        // this.$previousPreview.textContent, this.$currentPreview.textContent 을 연산한 결과
-        // this.$currentPreview.textContent 에 출력
+        const operation = this.previousOperation.trim()
+        let result = 0
+
+        if (operation === '+') {
+            result =
+                +this.$previousPreview.textContent.split(' ')[0] +
+                +this.$currentPreview.textContent
+        } else if (operation === '-') {
+            result =
+                +this.$previousPreview.textContent.split(' ')[0] -
+                +this.$currentPreview.textContent
+        } else if (operation === '*') {
+            result =
+                +this.$previousPreview.textContent.split(' ')[0] *
+                +this.$currentPreview.textContent
+        } else if (operation === '÷') {
+            result =
+                +this.$previousPreview.textContent.split(' ')[0] /
+                +this.$currentPreview.textContent
+        }
+
+        this.$previousPreview.textContent = ''
+        this.$currentPreview.textContent = result.toString()
+        this.currentOperation = ''
     }
 
     onReset() {
@@ -34,7 +55,8 @@ class Calulcator {
     }
 
     onDelete() {
-        // 한개씩 지우기
+        this.$currentPreview.textContent =
+            this.$currentPreview.textContent.slice(0, -1)
     }
 }
 
@@ -71,10 +93,18 @@ $numbers.forEach(($number) => {
 
 $operations.forEach(($operation) => {
     $operation.addEventListener('click', (e) => {
-        calc.onPressOperation(e.target.textContent)
+        if (e.target.textContent.trim() === '=') {
+            calc.onEqual()
+        } else {
+            calc.onPressOperation(e.target.textContent)
+        }
     })
 })
 
 $reset.addEventListener('click', (e) => {
     calc.onReset()
+})
+
+$delete.addEventListener('click', (e) => {
+    calc.onDelete()
 })
